@@ -7,14 +7,14 @@ class CSVWriter(Block):
 
     """Create and write to Comma Separated Value files."""
 
-    file = FileProperty(title='File', default='output.csv')
+    file_path = FileProperty(title='File', default='output.csv')
     row = Property(title='Row', default='')
     overwrite = BoolProperty(title='Overwrite File?', default=False)
     version = VersionProperty('0.1.0')
 
     def process_signals(self, signals):
         if self.overwrite():
-            file_name = self.file().value
+            file_name = self.file_path().value
             # csv module requires file objects be opened with newline=''
             with open(file_name, 'w', newline='') as csvfile:
                 self.logger.debug('{} opened'.format(file_name))
@@ -22,7 +22,7 @@ class CSVWriter(Block):
                     self._write_file(csvfile, signal)
         else:
             for signal in signals:
-                file_name = self.file(signal).value
+                file_name = self.file_path(signal).value
                 with open(file_name, 'a', newline='') as csvfile:
                     self.logger.debug('{} opened'.format(file_name))
                     self._write_file(csvfile, signal)
